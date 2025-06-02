@@ -5,7 +5,7 @@ import { CalendarClock, Briefcase } from 'lucide-react';
 
 const Experience: React.FC = () => {
   return (
-    <section id="experience" className="py-12 relative">
+    <section id="experience" className="py-4 relative">
       {/* Background Element */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-secondary-500/10 dark:bg-secondary-500/5 rounded-full filter blur-3xl"></div>
@@ -34,7 +34,7 @@ const Experience: React.FC = () => {
                   </div>
                   
                   {/* Content Card */}
-                  <div className="md:w-1/2 ml-12 md:ml-0">
+                  <div className="md:w-[47%] ml-8 md:ml-0">
                     <GlassCard hoverable className="h-full">
                       <div className="flex items-center gap-2 text-primary-600 dark:text-primary-400 mb-2">
                         <CalendarClock className="w-4 h-4" />

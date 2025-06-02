@@ -104,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
 
       {/* Mobile Navigation Menu */}
       <div 
-        className={`md:hidden glass shadow-glass overflow-hidden transition-all duration-300 ${
+        className={`hidden glass shadow-glass overflow-hidden transition-all duration-300 ${
           menuOpen ? 'max-h-96 py-4' : 'max-h-0'
         }`}
       >

@@ -39,22 +39,6 @@ const Hero: React.FC = () => {
               </Button>
             </div>
           </div>
-
-          <div className="order-1 md:order-2 flex justify-center">
-            <GlassCard className="max-w-md w-full animate-float opacity-0 animate-[fadeIn_0.5s_0.5s_forwards]">
-              <div className="aspect-square rounded-xl overflow-hidden mb-4">
-                <img 
-                  src="https://images.pexels.com/photos/1586996/pexels-photo-1586996.jpeg?auto=compress&cs=tinysrgb&w=600" 
-                  alt="Jonathan Doe" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-semibold mb-2">Jonathan Doe</h3>
-                <p className="text-gray-600 dark:text-gray-400">iOS Developer with 5+ years of experience</p>
-              </div>
-            </GlassCard>
-          </div>
         </div>
 
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">

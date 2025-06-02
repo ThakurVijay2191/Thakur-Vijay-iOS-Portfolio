@@ -3,20 +3,20 @@ import GlassCard from '../ui/GlassCard';
 
 const About: React.FC = () => {
   return (
-    <section id="about" className="py-12 relative">
+    <section className="py-8 relative">
       {/* Background Element */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-primary-500/10 dark:bg-primary-500/5 rounded-full filter blur-3xl"></div>
       </div>
 
       <div className="section-container">
-        <h2 className="section-title text-center">About Me</h2>
+        <h2 className="section-title text-center" id="about">About Me</h2>
         
         <div className="grid md:grid-cols-5 gap-6">
           <div className="md:col-span-2">
             <GlassCard>
               <img 
-                src="https://images.pexels.com/photos/6177645/pexels-photo-6177645.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                src="https://res.cloudinary.com/dhu478wic/image/upload/v1657127119/portfolio/h3tdtfdvugufntjktg03.jpg" 
                 alt="Jonathan working on iOS app" 
                 className="w-full h-auto rounded-lg"
               />

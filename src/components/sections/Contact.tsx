@@ -30,7 +30,7 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 relative">
+    <section id="contact" className="py-6 relative">
       {/* Background Element */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/4 left-1/3 w-80 h-80 bg-accent-500/10 dark:bg-accent-500/5 rounded-full filter blur-3xl"></div>

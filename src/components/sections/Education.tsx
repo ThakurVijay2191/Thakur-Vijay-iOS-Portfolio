@@ -5,7 +5,7 @@ import { GraduationCap, Calendar } from 'lucide-react';
 
 const Education: React.FC = () => {
   return (
-    <section id="education" className="py-12 relative">
+    <section id="education" className="py-2 relative">
       {/* Background Element */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute bottom-1/3 left-1/4 w-64 h-64 bg-primary-500/10 dark:bg-primary-500/5 rounded-full filter blur-3xl"></div>
