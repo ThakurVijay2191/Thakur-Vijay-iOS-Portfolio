@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Menu, X, Moon, Sun } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { fetchUserData } from '../../redux/features/userSlice';
+import { useSelector } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
 
 interface HeaderProps {
   darkMode: boolean;
@@ -9,6 +14,15 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, status } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchUserData());
+    }
+  }, [status, dispatch]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -47,7 +61,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <a href="#home" className="text-xl font-bold tracking-tight">
-            Jonathan Doe
+            {user?.name}
           </a>
 
           {/* Desktop Navigation */}

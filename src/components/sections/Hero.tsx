@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import GlassCard from '../ui/GlassCard';
 import Button from '../ui/Button';
 import { ArrowDown } from 'lucide-react';
+import { fetchUserData } from '../../redux/features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
 
 const Hero: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, status } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchUserData());
+    }
+  }, [status, dispatch]); 
+
   return (
     <section id="home" className="min-h-screen flex items-center relative overflow-hidden pt-16">
       {/* Background Elements */}
@@ -20,15 +32,13 @@ const Hero: React.FC = () => {
               Hello, I'm
             </p>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 opacity-0 animate-[fadeIn_0.5s_0.3s_forwards]">
-              Jonathan Doe
+              {user?.name}
             </h1>
             <h2 className="text-2xl sm:text-3xl text-gray-700 dark:text-gray-300 font-medium mb-6 opacity-0 animate-[fadeIn_0.5s_0.5s_forwards]">
-              iOS Developer
+            {user?.designation}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-lg opacity-0 animate-[fadeIn_0.5s_0.7s_forwards]">
-              Crafting elegant, intuitive iOS applications with Swift and SwiftUI.
-              Passionate about creating delightful user experiences that follow
-              Apple's Human Interface Guidelines.
+            {user?.description}
             </p>
             <div className="flex flex-wrap gap-4 opacity-0 animate-[fadeIn_0.5s_0.9s_forwards]">
               <Button onClick={() => document.getElementById('projects')?.scrollIntoView()}>
