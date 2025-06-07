@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import GlassCard from '../ui/GlassCard';
+import { fetchUserData } from '../../redux/features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
+import { urlFor } from '../../helper/imageUrlBuilder'
 
 const About: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, status } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => { 
+    if (status === 'idle') {
+      dispatch(fetchUserData());
+    }
+  }, [status, dispatch]); 
+
   return (
     <section className="py-8 relative">
       {/* Background Element */}
@@ -16,8 +29,8 @@ const About: React.FC = () => {
           <div className="md:col-span-2">
             <GlassCard>
               <img 
-                src="https://res.cloudinary.com/dhu478wic/image/upload/v1657127119/portfolio/h3tdtfdvugufntjktg03.jpg" 
-                alt="Jonathan working on iOS app" 
+                src={user?.profileImage ? urlFor(user.profileImage).url() : '/placeholder-image.jpg'} 
+                alt="Thakur Vijay working on iOS app" 
                 className="w-full h-auto rounded-lg"
               />
             </GlassCard>
@@ -29,42 +42,26 @@ const About: React.FC = () => {
               
               <div className="space-y-3 text-gray-700 dark:text-gray-300">
                 <p>
-                  I'm a passionate iOS Developer with over 5 years of experience crafting beautiful, 
-                  intuitive applications for the Apple ecosystem. My journey began at the University 
-                  of Technology, where I earned my Computer Science degree and fell in love with iOS 
-                  development during an internship at Apple.
-                </p>
-                
-                <p>
-                  What drives me is creating software that feels natural and delightful to use. I believe 
-                  in the power of thoughtful design, clean code, and attention to detail. My expertise spans 
-                  the entire development lifecycle from ideation and UX design to implementation and App Store 
-                  deployment.
-                </p>
-                
-                <p>
-                  When I'm not coding, you'll find me exploring the latest Apple technologies, contributing 
-                  to open source projects, or mentoring aspiring developers. I'm currently based in San Francisco, 
-                  where I enjoy hiking, photography, and collecting vintage Apple products.
+                 {user?.about}
                 </p>
               </div>
               
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <div>
                   <h4 className="font-medium text-primary-600 dark:text-primary-400">Location</h4>
-                  <p>San Francisco, CA</p>
+                  <p>{user?.address?.city}, {user?.address?.state}, {user?.address?.country}</p>
                 </div>
                 <div>
                   <h4 className="font-medium text-primary-600 dark:text-primary-400">Experience</h4>
-                  <p>5+ Years</p>
+                  <p>{user?.experience}</p>
                 </div>
                 <div>
                   <h4 className="font-medium text-primary-600 dark:text-primary-400">Languages</h4>
-                  <p>English, Spanish</p>
+                  <p>{user?.languages?.join(', ')}</p>
                 </div>
                 <div>
                   <h4 className="font-medium text-primary-600 dark:text-primary-400">Availability</h4>
-                  <p>Freelance / Full-time</p>
+                  <p>{user?.availability}</p>
                 </div>
               </div>
             </GlassCard>

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import GlassCard from '../ui/GlassCard';
 import Button from '../ui/Button';
 import { ArrowDown } from 'lucide-react';
 import { fetchUserData } from '../../redux/features/userSlice';
