@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import GlassCard from '../ui/GlassCard';
 import { skillsData } from '../../data/skills';
 import { Code, Lightbulb, BarChart3 } from 'lucide-react';
+import { fetchAllSkillsData } from '../../redux/features/skillSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
 
 const Skills: React.FC = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { skills, status } = useSelector((state: RootState) => state.skills);
+
+  useEffect(() => { 
+    if (status === 'idle') {
+      dispatch(fetchAllSkillsData());
+    }
+  }, [status, dispatch]); 
+
   return (
     <section id="skills" className="py-12 relative">
       {/* Background Element */}
@@ -24,16 +37,18 @@ const Skills: React.FC = () => {
             </div>
             
             <div className="space-y-3">
-              {skillsData.languages.map((skill, index) => (
+              {skills
+                .filter(skill => skill.type === 'languagesOrFrameworks')
+                .map((skill, index) => (
                 <div key={index}>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="font-medium">{skill.name}</span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">{skill.level}</span>
+                    <span className="font-medium">{skill?.skillName}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{skill?.ratio}%</span>
                   </div>
                   <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-primary-500 rounded-full"
-                      style={{ width: `${skill.percentage}%` }}
+                      style={{ width: `${skill.ratio}%` }}
                     ></div>
                   </div>
                 </div>
@@ -50,16 +65,18 @@ const Skills: React.FC = () => {
             </div>
             
             <div className="space-y-3">
-              {skillsData.technologies.map((skill, index) => (
+              {skills
+                .filter(skill => skill.type === 'appleTechnologies')
+                .map((skill, index) => (
                 <div key={index}>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="font-medium">{skill.name}</span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">{skill.level}</span>
+                    <span className="font-medium">{skill?.skillName}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{skill?.ratio}%</span>
                   </div>
                   <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-secondary-500 rounded-full"
-                      style={{ width: `${skill.percentage}%` }}
+                      style={{ width: `${skill?.ratio}%` }}
                     ></div>
                   </div>
                 </div>
@@ -76,16 +93,18 @@ const Skills: React.FC = () => {
             </div>
             
             <div className="space-y-3">
-              {skillsData.tools.map((skill, index) => (
+              {skills
+                .filter(skill => skill.type === 'toolAndPlatforms')
+                .map((skill, index) => (
                 <div key={index}>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="font-medium">{skill.name}</span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">{skill.level}</span>
+                    <span className="font-medium">{skill?.skillName}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{skill?.ratio}%</span>
                   </div>
                   <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-accent-500 rounded-full"
-                      style={{ width: `${skill.percentage}%` }}
+                      style={{ width: `${skill?.ratio}%` }}
                     ></div>
                   </div>
                 </div>
@@ -99,12 +118,14 @@ const Skills: React.FC = () => {
           <h3 className="text-xl font-semibold text-center mb-4">Additional Skills</h3>
           
           <div className="flex flex-wrap justify-center gap-3">
-            {skillsData.additional.map((skill, index) => (
+            {skills
+              .filter(skill => skill.type === 'other')
+              .map((skill, index) => (
               <div 
                 key={index} 
                 className="px-4 py-2 rounded-full glass hover:shadow-glass-hover transition-all duration-300"
               >
-                {skill}
+                {skill?.skillName}
               </div>
             ))}
           </div>

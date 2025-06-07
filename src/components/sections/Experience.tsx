@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import GlassCard from '../ui/GlassCard';
-import { experienceData } from '../../data/experiences';
 import { CalendarClock, Briefcase } from 'lucide-react';
+import { fetchAllExperiencesData } from '../../redux/features/experienceSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
 
 const Experience: React.FC = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { experiences, status } = useSelector((state: RootState) => state.experiences);
+
+
+  useEffect(() => { 
+    if (status === 'idle') {
+      dispatch(fetchAllExperiencesData());
+    }
+  }, [status, dispatch]); 
+
   return (
     <section id="experience" className="py-4 relative">
       {/* Background Element */}
@@ -21,7 +34,7 @@ const Experience: React.FC = () => {
             
             {/* Timeline Items */}
             <div className="space-y-8">
-              {experienceData.map((experience, index) => (
+              {experiences.map((experience, index) => (
                 <div 
                   key={index} 
                   className={`relative flex flex-col md:flex-row gap-6 ${
@@ -38,14 +51,16 @@ const Experience: React.FC = () => {
                     <GlassCard hoverable className="h-full">
                       <div className="flex items-center gap-2 text-primary-600 dark:text-primary-400 mb-2">
                         <CalendarClock className="w-4 h-4" />
-                        <span className="text-sm font-medium">{experience.period}</span>
+                        <span className="text-sm font-medium">
+                          {new Date(experience?.dateStarted).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - {experience?.isCurrentlyWorkingHere ? 'Present' : new Date(experience?.dateEnded).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        </span>
                       </div>
                       
-                      <h3 className="text-xl font-semibold">{experience.role}</h3>
-                      <p className="text-gray-600 dark:text-gray-400 mb-3">{experience.company}</p>
+                      <h3 className="text-xl font-semibold">{experience.jobTitle}</h3>
+                      <p className="text-gray-600 dark:text-gray-400 mb-3">{experience.companyName}</p>
                       
                       <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-                        {experience.responsibilities.map((item, i) => (
+                        {experience.points.map((item: any, i: any) => (
                           <li key={i} className="flex items-start">
                             <span className="text-primary-500 mr-2">•</span>
                             <span>{item}</span>
@@ -57,7 +72,7 @@ const Experience: React.FC = () => {
                         <div className="mt-3">
                           <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Technologies:</p>
                           <div className="flex flex-wrap gap-2">
-                            {experience.technologies.map((tech, i) => (
+                            {experience.technologies.map((tech: any, i: any) => (
                               <span 
                                 key={i} 
                                 className="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-xs font-medium"

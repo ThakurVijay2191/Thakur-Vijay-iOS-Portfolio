@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GlassCard from '../ui/GlassCard';
-import { projectsData } from '../../data/projects';
 import { ExternalLink, LayoutGrid, List } from 'lucide-react';
+import { fetchAllProjectsData } from '../../redux/features/projectSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
+import { urlFor } from '../../helper/imageUrlBuilder'
+import { PortableText } from '@portabletext/react';
 
 const Projects: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { projects, status } = useSelector((state: RootState) => state.projects);
+
+  useEffect(() => { 
+    if (status === 'idle') {
+      dispatch(fetchAllProjectsData());
+    }
+  }, [status, dispatch]); 
 
   return (
     <section id="projects" className="py-12 relative">
@@ -45,22 +58,24 @@ const Projects: React.FC = () => {
         
         {viewMode === 'grid' ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projectsData.map((project, index) => (
+            {projects?.map((project, index) => (
               <GlassCard key={index} hoverable className="flex flex-col h-full">
                 <div className="rounded-lg overflow-hidden mb-3 aspect-video">
                   <img 
-                    src={project.image} 
-                    alt={project.title} 
+                    src={project?.images?.[0]?.asset?._ref ? urlFor(project.images[0]).url() : '/placeholder-image.jpg'}
+                    alt={project?.projectName} 
                     className="w-full h-full object-cover"
                   />
                 </div>
                 
-                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-3 flex-grow">{project.description}</p>
+                <h3 className="text-xl font-semibold mb-2">{project?.projectName}</h3>
+                <div className="text-gray-600 dark:text-gray-400 mb-3 flex-grow">
+                  <PortableText value={project?.description} />
+                </div>
                 
                 <div className="mt-auto">
                   <div className="flex flex-wrap gap-2 mb-3">
-                    {project.technologies.map((tech, i) => (
+                    {project?.skills.map((tech: any, i: any) => (
                       <span 
                         key={i} 
                         className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-xs font-medium"
@@ -71,7 +86,7 @@ const Projects: React.FC = () => {
                   </div>
                   
                   <a 
-                    href={project.appStoreLink} 
+                    href={project?.appStoreLink} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-primary-600 dark:text-primary-400 hover:underline"
@@ -85,25 +100,27 @@ const Projects: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {projectsData.map((project, index) => (
+            {projects?.map((project, index) => (
               <GlassCard key={index} hoverable>
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="md:w-1/3">
                     <div className="rounded-lg overflow-hidden aspect-video md:aspect-square">
                       <img 
-                        src={project.image} 
-                        alt={project.title} 
+                        src={project?.images[0] ? urlFor(project?.images[0]).url() : '/placeholder-image.jpg'}
+                        alt={project?.projectName} 
                         className="w-full h-full object-cover"
                       />
                     </div>
                   </div>
                   
                   <div className="md:w-2/3">
-                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-3">{project.description}</p>
+                    <h3 className="text-xl font-semibold mb-2">{project?.projectName}</h3>
+                    <div className="text-gray-600 dark:text-gray-400 mb-3">
+                      <PortableText value={project?.description} />
+                    </div>
                     
                     <div className="flex flex-wrap gap-2 mb-3">
-                      {project.technologies.map((tech, i) => (
+                      {project?.skills.map((tech: any, i: any) => (
                         <span 
                           key={i} 
                           className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-xs font-medium"
@@ -115,7 +132,7 @@ const Projects: React.FC = () => {
                     
                     <div className="mt-2">
                       <a 
-                        href={project.appStoreLink} 
+                        href={project?.appStoreLink} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="inline-flex items-center text-primary-600 dark:text-primary-400 hover:underline"

@@ -3,6 +3,7 @@
 import client from './sanityClient.ts'
 import {
   getAllUsersQuery,
+  getAllExperiencesQuery,
   getAllProjectsQuery,
   getAllSkillsQuery,
   getUserByIdQuery,
@@ -15,6 +16,15 @@ export const fetchAllUsers = async () => {
     return await client.fetch(getAllUsersQuery)
   } catch (err) {
     console.error('Error fetching users:', err)
+    return []
+  }
+}
+
+export const fetchAllExperiences = async () => {
+  try {
+    return await client.fetch(getAllExperiencesQuery)
+  } catch (err) {
+    console.error('Error fetching experiences:', err)
     return []
   }
 }

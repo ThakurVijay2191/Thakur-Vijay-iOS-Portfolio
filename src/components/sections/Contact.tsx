@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import GlassCard from '../ui/GlassCard';
 import Button from '../ui/Button';
 import { Mail, MapPin, Send, Smartphone } from 'lucide-react';
+import { fetchUserData } from '../../redux/features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
 
 const Contact: React.FC = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, status } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => { 
+    if (status === 'idle') {
+      dispatch(fetchUserData());
+    }
+  }, [status, dispatch]); 
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -53,10 +66,10 @@ const Contact: React.FC = () => {
                   <div>
                     <h4 className="font-medium text-gray-900 dark:text-white mb-1">Email</h4>
                     <a 
-                      href="mailto:contact@example.com" 
+                      href={`mailto:${user?.email}`}
                       className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                     >
-                      contact@example.com
+                      {user?.email}
                     </a>
                   </div>
                 </div>
@@ -68,10 +81,10 @@ const Contact: React.FC = () => {
                   <div>
                     <h4 className="font-medium text-gray-900 dark:text-white mb-1">Phone</h4>
                     <a 
-                      href="tel:+11234567890" 
+                      href={`tel:${user?.phone}`}
                       className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                     >
-                      +1 (123) 456-7890
+                      {user?.phone}
                     </a>
                   </div>
                 </div>
@@ -83,8 +96,7 @@ const Contact: React.FC = () => {
                   <div>
                     <h4 className="font-medium text-gray-900 dark:text-white mb-1">Location</h4>
                     <p className="text-gray-600 dark:text-gray-400">
-                      San Francisco, California<br />
-                      United States
+                    {user?.address?.city}, {user?.address?.state}, {user?.address?.country}
                     </p>
                   </div>
                 </div>
