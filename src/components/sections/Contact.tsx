@@ -5,6 +5,8 @@ import { Mail, MapPin, Send, Smartphone } from 'lucide-react';
 import { fetchUserData } from '../../redux/features/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
+import emailjs from '@emailjs/browser';
+
 
 const Contact: React.FC = () => {
 
@@ -24,22 +26,35 @@ const Contact: React.FC = () => {
     message: '',
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // This would typically connect to a backend service
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message! I\'ll get back to you soon.');
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: '',
-    });
+    setIsSubmitting(true);
+
+    try {
+      await emailjs.send(
+        'service_gamct5a',      // Replace with your EmailJS service ID
+        'template_fu3wh3v',     // Replace with your EmailJS template ID
+        formData,
+        'EHOQ2Kvn6e_psrUMH'       // Replace with your EmailJS public key
+      );
+
+      setSubmitSuccess(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      console.error('Email send error:', error);
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => setSubmitSuccess(false), 5000);
+    }
   };
 
   return (
@@ -118,7 +133,17 @@ const Contact: React.FC = () => {
           <div className="md:col-span-3">
             <GlassCard>
               <h3 className="text-2xl font-semibold mb-6">Send Me A Message</h3>
-              
+              {submitSuccess ? (
+              <div className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 p-4 rounded-lg mb-6">
+                Thank you! Your message has been sent successfully.
+              </div>
+            ) : null}
+            
+            {submitError ? (
+              <div className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 p-4 rounded-lg mb-6">
+                {submitError}
+              </div>
+            ) : null}
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                   <div>
@@ -186,9 +211,15 @@ const Contact: React.FC = () => {
                   ></textarea>
                 </div>
                 
-                <Button type="submit" className="w-full sm:w-auto">
+                <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
                   <Send className="w-4 h-4 mr-2" />
-                  Send Message
+                  {isSubmitting ? (
+                  <span>Sending...</span>
+                ) : (
+                  <>
+                    Send Message
+                  </>
+                )}
                 </Button>
               </form>
             </GlassCard>

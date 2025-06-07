@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import GlassCard from '../ui/GlassCard';
 import { educationData } from '../../data/education';
 import { GraduationCap, Calendar } from 'lucide-react';
+import { fetchAllEducationsData } from '../../redux/features/educationSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
 
 const Education: React.FC = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { educations, status } = useSelector((state: RootState) => state.educations);
+
+
+  useEffect(() => { 
+    if (status === 'idle') {
+      dispatch(fetchAllEducationsData());
+    }
+  }, [status, dispatch]); 
+
   return (
     <section id="education" className="py-2 relative">
       {/* Background Element */}
@@ -16,7 +30,7 @@ const Education: React.FC = () => {
         
         <div className="max-w-3xl mx-auto">
           <div className="space-y-4">
-            {educationData.map((education, index) => (
+            {educations.map((education, index) => (
               <GlassCard key={index} hoverable>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="sm:w-16 flex items-start justify-center">
@@ -28,43 +42,13 @@ const Education: React.FC = () => {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 text-primary-600 dark:text-primary-400 mb-1">
                       <Calendar className="w-4 h-4" />
-                      <span className="text-sm font-medium">{education.period}</span>
+                      <span className="text-sm font-medium">{new Date(education?.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - {education?.isCurrentlyStudying ? 'Current' : new Date(education?.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
                     </div>
                     
-                    <h3 className="text-xl font-semibold">{education.degree}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-2">{education.institution}</p>
+                    <h3 className="text-xl font-semibold">{education?.degreeName}</h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-2">{education?.institutionName}</p>
                     
-                    <p className="text-gray-700 dark:text-gray-300">{education.description}</p>
-                    
-                    {education.achievements && (
-                      <div className="mt-2">
-                        <p className="font-medium mb-1">Achievements:</p>
-                        <ul className="space-y-1">
-                          {education.achievements.map((achievement, i) => (
-                            <li key={i} className="flex items-start">
-                              <span className="text-primary-500 mr-2">•</span>
-                              <span className="text-gray-700 dark:text-gray-300">{achievement}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    
-                    {education.relevantCourses && (
-                      <div className="mt-2">
-                        <p className="font-medium mb-1">Relevant Courses:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {education.relevantCourses.map((course, i) => (
-                            <span 
-                              key={i} 
-                              className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-xs font-medium"
-                            >
-                              {course}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                    <p className="text-gray-700 dark:text-gray-300">Grade: {education?.grade}</p>
                   </div>
                 </div>
               </GlassCard>

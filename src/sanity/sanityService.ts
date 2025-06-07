@@ -8,7 +8,8 @@ import {
   getAllSkillsQuery,
   getUserByIdQuery,
   getProjectBySlugQuery,
-  getSingleUserQuery
+  getSingleUserQuery,
+  getAllEducationsQuery
 } from './queries.ts'
 
 export const fetchAllUsers = async () => {
@@ -25,6 +26,15 @@ export const fetchAllExperiences = async () => {
     return await client.fetch(getAllExperiencesQuery)
   } catch (err) {
     console.error('Error fetching experiences:', err)
+    return []
+  }
+}
+
+export const fetchAllEducations = async () => {
+  try {
+    return await client.fetch(getAllEducationsQuery)
+  } catch (err) {
+    console.error('Error fetching educations:', err)
     return []
   }
 }
